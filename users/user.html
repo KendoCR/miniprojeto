@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Detalhes do Funcionário</h1>
+    <div id="user-details">
+        <img id="user-photo" src="" alt="Foto do Funcionário">
+        <input type="file" id="upload-photo" accept="image/*" style="display: none;">
+        <label for="upload-photo" id="upload-label">Altere a foto do funcionario</label>
+        <h2 id="user-name"></h2>
+        <p><strong>Função:</strong> <span id="user-funcao"></span></p>
+        <p><strong>Observação:</strong> <span id="user-observacao"></span></p>
+        <p><strong>Salário:</strong> <span id="user-salario"></span></p>
+    </div>
+
+    <!-- Eu gostei de usar assim a estilização -->
+    <script>
+        // Carregar detalhes do usuário e lidar com o upload de fotos
+        document.addEventListener('DOMContentLoaded', () => {
+            const userDetails = document.getElementById('user-details');
+            const userPhoto = document.getElementById('user-photo');
+            const userName = document.getElementById('user-name');
+            const userFuncao = document.getElementById('user-funcao');
+            const userObservacao = document.getElementById('user-observacao');
+            const userSalario = document.getElementById('user-salario');
+            const uploadPhotoInput = document.getElementById('upload-photo');
+            const uploadLabel = document.getElementById('upload-label');
+            const returnButton = document.getElementById('return-button');
+
+            // Função para obter o ID do funcionário da URL
+            function getEmployeeIdFromURL() {
+                const params = new URLSearchParams(window.location.search);
+                return params.get('id');
+            }
+
+            // Função para salvar a URL da foto do funcionário no localStorage
+            function saveUserPhotoUrl(photoUrl, userId) {
+                localStorage.setItem(`userPhotoUrl_${userId}`, photoUrl);
+            }
+
+            // Função para exibir a foto do usuário a partir do localStorage
+            function displayUserPhoto(userId) {
+                const photoUrl = localStorage.getItem(`userPhotoUrl_${userId}`);
+                if (photoUrl) {
+                    userPhoto.src = photoUrl;
+                }
+            }
+
+            // Carregar a foto do usuário quando a página é carregada
+            const userId = getEmployeeIdFromURL();
+            displayUserPhoto(userId);
+
+            // Adicionar um evento de mudança ao input de upload de fotos
+            uploadPhotoInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+
+                        reader.onload = (e) => {
+                            // Exibir a imagem carregada
+                            userPhoto.src = e.target.result;
+
+                            // Salvar a URL da foto no localStorage associada ao ID do funcionário
+                            saveUserPhotoUrl(e.target.result, userId);
+                        };
+
+                        // Ler o conteúdo do arquivo como URL de dados
+                        reader.readAsDataURL(file);
+                    } else {
+                        alert('Por favor, selecione uma imagem válida.');
+                        uploadPhotoInput.value = ''; // Limpar o input de arquivo
+                    }
+                }
+            });
+
+            // Adicionar um evento de clique à etiqueta de upload para abrir o seletor de arquivo
+            uploadLabel.addEventListener('click', () => {
+                uploadPhotoInput.click();
+            });
+
+
+
+            // Carregar detalhes do funcionário a partir do localStorage
+            const selectedUser = JSON.parse(localStorage.getItem('selectedUser'));
+            if (selectedUser) {
+                userPhoto.src = selectedUser.photoUrl || 'placeholder.jpg';
+                userName.textContent = selectedUser.nome;
+                userFuncao.textContent = selectedUser.funcao;
+                userObservacao.textContent = selectedUser.observacao || 'Nenhuma observação disponível';
+                userSalario.textContent = `R$ ${selectedUser.salario}`;
+            } else {
+                userDetails.innerHTML = '<p>Usuário não encontrado.</p>';
+            }
+        });
+    </script>
+</body>
+</html>

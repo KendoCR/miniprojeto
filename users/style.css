@@ -1,0 +1,44 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    background-color: #3498db;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    margin: 0;
+}
+
+#user-details {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+#user-photo {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+#user-name {
+    font-size: 24px;
+    margin-top: 10px;
+}
+
+
+p {
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+strong {
+    font-weight: bold;
+}
